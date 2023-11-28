@@ -65,12 +65,17 @@ class FSStorage(models.Model):
     _inherit = "server.env.mixin"
     _description = "FS Storage"
 
-    __slots__ = ("__fs", "__odoo_storage_path")
+    def __init__(self, pool, cr):
+        super(FSStorage, self).__init__(pool, cr)
+        type(self).attributes = []
+        type(self).attributes = {"__fs": None, "__odoo_storage_path": None}
 
-    def __init__(self, env, ids=(), prefetch_ids=()):
-        super().__init__(env, ids=ids, prefetch_ids=prefetch_ids)
-        self.__fs = None
-        self.__odoo_storage_path = None
+    @classmethod
+    def _browse(cls, env, ids=(), prefetch_ids=()):
+        records = super()._browse(env, ids=ids, prefetch_ids=prefetch_ids)
+        cls.attributes["__fs"] = None
+        cls.attributes["__odoo_storage_path"] = None
+        return records
 
     name = fields.Char(required=True)
     code = fields.Char(
@@ -155,7 +160,7 @@ class FSStorage(models.Model):
         return {"protocol": {}, "options": {}, "directory_path": {}}
 
     def write(self, vals):
-        self.__fs = None
+        self.attributes["__fs"] = None
         self.clear_caches()
         return super().write(vals)
 
@@ -260,9 +265,9 @@ class FSStorage(models.Model):
     def fs(self) -> fsspec.AbstractFileSystem:
         """Get the fsspec filesystem for this backend."""
         self.ensure_one()
-        if not self.__fs:
-            self.__fs = self._get_filesystem()
-        return self.__fs
+        if not self.attributes.get("__fs"):
+            self.attributes["__fs"] = self._get_filesystem()
+        return self.attributes.get("__fs")
 
     def _get_filesystem_storage_path(self) -> str:
         """Get the path to the storage directory.
@@ -283,9 +288,9 @@ class FSStorage(models.Model):
         This path is relative to the odoo filestore.and is used as root path
         when the protocol is filesystem.
         """
-        if not self.__odoo_storage_path:
-            self.__odoo_storage_path = self._get_filesystem_storage_path()
-        return self.__odoo_storage_path
+        if not self.attributes.get("__odoo_storage_path"):
+            self.attributes["__odoo_storage_path"] = self._get_filesystem_storage_path()
+        return self.attributes.get("__odoo_storage_path")
 
     def _recursive_add_odoo_storage_path(self, options: dict) -> dict:
         """Add the odoo storage path to the options.

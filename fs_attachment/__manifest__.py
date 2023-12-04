@@ -10,7 +10,7 @@
     "license": "AGPL-3",
     "development_status": "Beta",
     "category": "Knowledge Management",
-    "depends": ["fs_storage"],
+    "depends": ["fs_storage", "base_ir_binary"],
     "website": "https://github.com/OCA/storage",
     "data": [
         "security/fs_file_gc.xml",

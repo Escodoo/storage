@@ -221,7 +221,7 @@ class FsStorage(models.Model):
             model_ids = []
             for xmlid in xmlids:
                 # Method returns False if no model is found for this xmlid
-                model_id = self.env["ir.model.data"]._xmlid_to_res_id(xmlid)
+                model_id = self.env["ir.model.data"].xmlid_to_res_id(xmlid)
                 if model_id:
                     model_ids.append(model_id)
             rec.model_ids = [(6, 0, model_ids)]
@@ -247,7 +247,7 @@ class FsStorage(models.Model):
             field_ids = []
             for xmlid in xmlids:
                 # Method returns False if no field is found for this xmlid
-                field_id = self.env["ir.model.data"]._xmlid_to_res_id(xmlid)
+                field_id = self.env["ir.model.data"].xmlid_to_res_id(xmlid)
                 if field_id:
                     field_ids.append(field_id)
             rec.field_ids = [(6, 0, field_ids)]

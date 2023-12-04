@@ -2,15 +2,17 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from __future__ import annotations
 
-from odoo.http import STATIC_CACHE_LONG, Response, Stream, request
+from odoo.http import STATIC_CACHE_LONG, Response, request
 from odoo.tools import config
+
+from odoo.addons.base_ir_binary.http import Stream
 
 from .models.ir_attachment import IrAttachment
 
 try:
     from werkzeug.utils import send_file as _send_file
 except ImportError:
-    from odoo.tools._vendor.send_file import send_file as _send_file
+    from odoo.http import send_file as _send_file
 
 
 class FsStream(Stream):

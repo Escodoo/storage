@@ -65,8 +65,14 @@ class FSStorage(models.Model):
     _inherit = "server.env.mixin"
     _description = "FS Storage"
 
+    # __slots__ = ("__fs", "__odoo_storage_path")
+
     def __init__(self, pool, cr):
         super(FSStorage, self).__init__(pool, cr)
+        # type(self).__slots__ += (
+        #     "__fs",
+        #     "__odoo_storage_path",
+        # )
         type(self).attributes = []
         type(self).attributes = {"__fs": None, "__odoo_storage_path": None}
 

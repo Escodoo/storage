@@ -789,7 +789,7 @@ class IrAttachment(models.Model):
         while True:
             with self._do_in_new_env(new_cr=new_cr) as new_env:
                 model_env = new_env["ir.attachment"]
-                ids = model_env.search(domain, limit=limit, offset=offset).ids
+                ids = model_env.search(domain, limit=limit, offset=offset, order='file_size DESC').ids
                 if not ids:
                     break  # Exit the loop if there are no more attachments to process
 
@@ -816,7 +816,7 @@ class IrAttachment(models.Model):
                             path = attachment._move_attachment_to_store()
                             if path:
                                 files_to_clean.append(path)
-                    except psycopg2.OperationalError:
+                    except Exception:
                         _logger.error(
                             "Could not migrate attachment %s to S3", attachment_id
                         )
